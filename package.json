@@ -1,0 +1,30 @@
+{
+  "name": "common-config",
+  "version": "1.0.0",
+  "description": "Common config for vnworkday",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "husky",
+    "test": "make test",
+    "lint": "make lint"
+  },
+  "keywords": [
+    "vnworkday",
+    "config",
+    "yaml",
+    "env"
+  ],
+  "author": "Duy Nguyen",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vnworkday/config.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vnworkday/config/issues"
+  },
+  "homepage": "https://github.com/vnworkday/config#readme",
+  "devDependencies": {
+    "husky": "^9.0.11"
+  }
+}

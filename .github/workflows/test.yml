@@ -1,0 +1,44 @@
+name: PR Test
+on:
+  pull_request:
+    branches:
+      - main
+    types: [ opened, synchronize, reopened ]
+    paths:
+      - 'go.mod'
+      - '**.go'
+  workflow_dispatch: # for manual trigger
+jobs:
+  test:
+    name: Test on go ${{ matrix.go }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        go: [ 1.22 ]
+        os: [ ubuntu-latest ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Go ${{ matrix.go }}
+        uses: WillAbides/setup-go-faster@v1
+        with:
+          go-version: ${{ matrix.go }}
+      - name: Unit Test
+        run: go test ./... -covermode=atomic -vet=all -coverprofile=profile.cov
+      - name: Send Coverage
+        uses: shogo82148/actions-goveralls@v1
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-profile: profile.cov
+          flag-name: Go-${{ matrix.go }}
+          parallel: true
+  # notifies that all test jobs are finished.
+  # https://github.com/shogo82148/actions-goveralls
+  finish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: shogo82148/actions-goveralls@v1.8.0
+        with:
+          parallel-finished: true

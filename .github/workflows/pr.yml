@@ -1,0 +1,32 @@
+name: PR Lint
+on:
+  pull_request:
+    branches:
+      - main
+    types: [ opened, synchronize, reopened ]
+    paths:
+      - 'go.mod'
+      - '**.go'
+      - '**.yml'
+permissions:
+  contents: read
+  checks: write
+jobs:
+  lint:
+    name: Lint on go ${{ matrix.go }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        go: [ 1.22 ]
+        os: [ ubuntu-latest ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Go ${{ matrix.go }}
+        uses: WillAbides/setup-go-faster@v1
+        with:
+          go-version: ${{ matrix.go }}
+      - name: GolangCI Lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.59
