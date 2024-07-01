@@ -69,4 +69,4 @@ current_branch=$(git rev-parse --abbrev-ref HEAD)
 check_branch
 check_version
 check_dirty
-#release
+release
