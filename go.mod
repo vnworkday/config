@@ -1,4 +1,4 @@
-module github.com/vnworkday/go-config
+module github.com/vnworkday/config
 
 go 1.22
 
