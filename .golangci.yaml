@@ -37,6 +37,10 @@ linters-settings:
         replacement: 'a[b:]'
   exhaustive:
     default-signifies-exhaustive: true
+  varnamelen:
+    min-name-length: 2
+  wsl:
+    allow-cuddle-declarations: true
 #  errorlint:
 #    # Check whether fmt.Errorf uses the %w verb for formatting errors. See the readme for caveats
 #    errorf: true
@@ -119,6 +123,7 @@ linters:
     - gomnd # deprecated
     - exhaustruct # too much unnecessary verbosity
     - gci # already used goimports
+    - testpackage
 
 output:
   sort-results: true

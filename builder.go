@@ -26,15 +26,17 @@ type Builder struct {
 
 // FromEnv reads environment variables and adds them to the config map.
 func (b *Builder) FromEnv() *Builder {
-	mergeMaps(b.configMap, stringsToMap(os.Environ()))
+	mergeMaps(b.configMap, keyValsToMap(os.Environ()))
 
 	return b
 }
 
+// FromFile reads a file and adds its contents to the config map.
 func (b *Builder) FromFile(file string) *Builder {
 	return b.appendFile(file, true)
 }
 
+// MapTo accepts a struct pointer and populates it with the current config state.
 func (b *Builder) MapTo(target any) error {
 	return b.decode(target, "")
 }
@@ -45,6 +47,8 @@ func (b *Builder) Sub(target any, prefix string) error {
 	return b.decode(target, prefix+b.structDelimiter)
 }
 
+// decode reads the config map and populates the target struct with the values.
+// It returns an error if any fields failed to convert.
 func (b *Builder) decode(target any, prefix string) error {
 	structPtr := reflect.ValueOf(target)
 
@@ -62,7 +66,7 @@ func (b *Builder) decode(target any, prefix string) error {
 			continue
 		}
 
-		switch fieldPtr.Elem().Type().Kind() {
+		switch fieldPtr.Kind() {
 		case reflect.Slice:
 			for _, i := range convertAndSetSlice(fieldPtr, stringToSlice(stringValue, b.sliceDelimiter)) {
 				b.failedFields = append(b.failedFields, fmt.Sprintf("%s[%d]", key, i))
@@ -103,11 +107,12 @@ func (b *Builder) appendFile(file string, includeErr bool) *Builder {
 		b.failedFields = append(b.failedFields, fmt.Sprintf("file: %s, error: %s", file, scanner.Err()))
 	}
 
-	mergeMaps(b.configMap, stringsToMap(scannedStrings))
+	mergeMaps(b.configMap, keyValsToMap(scannedStrings))
 
 	return b
 }
 
+// newBuilder creates a new Builder with the provided options.
 func newBuilder(opts ...Option) *Builder {
 	builder := &Builder{
 		structDelimiter: defaultStructDelimiter,
@@ -124,14 +129,28 @@ func newBuilder(opts ...Option) *Builder {
 
 type Option func(*Builder)
 
-func WithStructDelimiter(d string) Option {
-	return func(b *Builder) {
-		b.structDelimiter = d
+// WithStructDelimiter sets the delimiter used to separate struct fields.
+func WithStructDelimiter(delimiter string) Option {
+	return func(builder *Builder) {
+		delimiter = strings.TrimSpace(delimiter)
+
+		if delimiter == "" {
+			panic("struct delimiter cannot be empty")
+		}
+
+		builder.structDelimiter = delimiter
 	}
 }
 
-func WithSliceDelimiter(d string) Option {
-	return func(b *Builder) {
-		b.sliceDelimiter = d
+// WithSliceDelimiter sets the delimiter used to separate slice elements.
+func WithSliceDelimiter(delimiter string) Option {
+	return func(builder *Builder) {
+		delimiter = strings.TrimSpace(delimiter)
+
+		if delimiter == "" {
+			panic("slice delimiter cannot be empty")
+		}
+
+		builder.sliceDelimiter = delimiter
 	}
 }
