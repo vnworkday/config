@@ -1,6 +1,6 @@
 {
   "name": "common-config",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Common config for vnworkday",
   "main": "index.js",
   "scripts": {
