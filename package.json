@@ -1,6 +1,6 @@
 {
   "name": "common-config",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Common config for vnworkday",
   "main": "index.js",
   "scripts": {
@@ -25,6 +25,8 @@
   },
   "homepage": "https://github.com/vnworkday/config#readme",
   "devDependencies": {
+    "@action-validator/cli": "^0.6.0",
+    "@action-validator/core": "^0.6.0",
     "husky": "^9.0.11"
   }
 }

@@ -27,17 +27,17 @@ check_import() {
   declare -a target_files
   while IFS= read -r line; do
     target_files+=("$line")
-  done < <(git diff --name-only origin/main --diff-filter=MA | grep "\.go" | grep -v ".pb.go" | grep -v ".go-version" | grep -v ".golangci.yaml")
+  done < <(git diff --name-only origin/main --diff-filter=MA | grep "\.go$" | grep -v ".pb.go" | grep -v ".go-version" | grep -v ".golangci.yaml")
 
   if [[ ${#target_files[@]} -eq 0 ]]; then
-    echo "🚫 No Go files changed relative to $base_branch, skipping import check."
+    echo "✅  No Go files changed relative to $base_branch, skipping import check."
     return
   fi
 
-#  echo "🔍 Checking the following files:"
-#  for file in "${target_files[@]}"; do
-#    echo "  - $file"
-#  done
+  echo "🔍 Checking the following files:"
+  for file in "${target_files[@]}"; do
+    echo "  - $file"
+  done
 
   declare -a bad_files
   bad_files=()

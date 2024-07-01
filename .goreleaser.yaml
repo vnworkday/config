@@ -1,0 +1,9 @@
+project_name: config
+release:
+  github:
+    owner: vnworkday
+    name: config
+builds:
+  - skip: true
+checksum:
+  name_template: checksums.txt
