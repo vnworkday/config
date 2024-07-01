@@ -1,8 +1,8 @@
-project_name: go-config
+project_name: config
 release:
   github:
     owner: vnworkday
-    name: go-config
+    name: config
 builds:
   - skip: true
 checksum:
