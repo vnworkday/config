@@ -20,7 +20,7 @@ check_branch() {
 check_version() {
     echo "🔍 Checking version..."
     echo "📦 Package version: $(node -p "require('./package.json').version")"
-    latest_git_tag=$(git describe --tags --abbrev=0:0 2>/dev/null || echo "v0.1.0")
+    latest_git_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.1.0")
     pkg_version="v$(node -p "require('./package.json').version")"
     if [[ $latest_git_tag != "$pkg_version" ]]; then
         echo "⚠️ Latest tag is not the same as the package version. Please check the package version."
