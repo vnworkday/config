@@ -29,6 +29,7 @@ linters-settings:
       - empty # allow returning `interface{}`
       - stdlib # allow returning standard library types
       - go.uber.org\/fx\.Option # allow returning fx.Option
+      - google.golang.org\/grpc\/credentials\.TransportCredentials
   gofmt:
     rewrite-rules:
       - pattern: 'interface{}'
@@ -41,6 +42,7 @@ linters-settings:
     min-name-length: 2
   wsl:
     allow-cuddle-declarations: true
+    allow-assign-and-anything: true
 #  errorlint:
 #    # Check whether fmt.Errorf uses the %w verb for formatting errors. See the readme for caveats
 #    errorf: true
@@ -91,15 +93,6 @@ linters-settings:
 #  gosimple:
 #    # https://staticcheck.io/docs/options#checks
 #    checks: ["all"]
-#  govet:
-#    # enable all govet checks
-#    enable-all: true
-#  lll:
-#    # max line length, lines longer will be reported. Default is 120.
-#    # '\t' is counted as 1 character by default, and can be changed with the tab-width option
-#    line-length: 120
-#    # tab width in spaces. Default to 1.
-#    tab-width: 1
 #  misspell:
 #    locale: US
 #  nakedret:
@@ -124,6 +117,7 @@ linters:
     - exhaustruct # too much unnecessary verbosity
     - gci # already used goimports
     - testpackage
+    - wrapcheck # this seems to be a false positive
 
 output:
   sort-results: true

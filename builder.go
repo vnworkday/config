@@ -53,7 +53,7 @@ func (b *Builder) decode(target any, prefix string) error {
 	structPtr := reflect.ValueOf(target)
 
 	if structPtr.Kind() != reflect.Ptr || structPtr.Elem().Kind() != reflect.Struct {
-		panic("target must be a struct pointer")
+		panic("config: failed to decode. target must be a struct pointer")
 	}
 
 	m := make(map[string]reflect.Value)
@@ -81,7 +81,7 @@ func (b *Builder) decode(target any, prefix string) error {
 	sort.Strings(b.failedFields) // sort for deterministic output
 
 	if len(b.failedFields) > 0 {
-		return errors.Errorf("failed to convert fields: %s", strings.Join(b.failedFields, ", "))
+		return errors.Errorf("config: the following fields had errors: %s", strings.Join(b.failedFields, ", "))
 	}
 
 	return nil
@@ -93,7 +93,7 @@ func (b *Builder) appendFile(file string, includeErr bool) *Builder {
 	content, err := os.ReadFile(file)
 
 	if includeErr && err != nil {
-		b.failedFields = append(b.failedFields, fmt.Sprintf("file: %s, error: %s", file, err))
+		b.failedFields = append(b.failedFields, fmt.Sprintf("file[%v]: read - %s", file, err.Error()))
 	}
 
 	scanner := bufio.NewScanner(bytes.NewReader(content))
@@ -104,7 +104,7 @@ func (b *Builder) appendFile(file string, includeErr bool) *Builder {
 	}
 
 	if includeErr && scanner.Err() != nil {
-		b.failedFields = append(b.failedFields, fmt.Sprintf("file: %s, error: %s", file, scanner.Err()))
+		b.failedFields = append(b.failedFields, fmt.Sprintf("file[%v]: scan - %s", file, scanner.Err().Error()))
 	}
 
 	mergeMaps(b.configMap, keyValsToMap(scannedStrings))
@@ -135,7 +135,7 @@ func WithStructDelimiter(delimiter string) Option {
 		delimiter = strings.TrimSpace(delimiter)
 
 		if delimiter == "" {
-			panic("struct delimiter cannot be empty")
+			panic("config: struct delimiter cannot be empty")
 		}
 
 		builder.structDelimiter = delimiter
@@ -148,7 +148,7 @@ func WithSliceDelimiter(delimiter string) Option {
 		delimiter = strings.TrimSpace(delimiter)
 
 		if delimiter == "" {
-			panic("slice delimiter cannot be empty")
+			panic("config: slice delimiter cannot be empty")
 		}
 
 		builder.sliceDelimiter = delimiter
