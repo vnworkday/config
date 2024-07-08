@@ -24,6 +24,10 @@ test:
 lint:
 	@"$(CURDIR)/scripts/lint.sh"
 
+## githubci: Validate Github Actions configuration
+githubci:
+	@"$(CURDIR)/scripts/githubci.sh"
+
 .NOTPARALLEL:
 
-.PHONY: help test lint
+.PHONY: help test lint githubci

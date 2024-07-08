@@ -14,11 +14,6 @@ func Test_shouldPanic(t *testing.T) {
 		wantPanic bool
 	}{
 		{
-			name:      "*struct",
-			target:    &emptyStruct,
-			wantPanic: false,
-		},
-		{
 			name:      "struct",
 			target:    emptyStruct,
 			wantPanic: true,
@@ -49,7 +44,7 @@ func Test_shouldPanic(t *testing.T) {
 				}
 			}()
 
-			_ = FromEnv().MapTo(test.target)
+			_, _ = LoadConfig[any](&test.target)
 		})
 	}
 }

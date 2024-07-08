@@ -33,7 +33,11 @@ func (b *Builder) FromEnv() *Builder {
 
 // FromFile reads a file and adds its contents to the config map.
 func (b *Builder) FromFile(file string) *Builder {
-	return b.appendFile(file, true)
+	if IsLocal() {
+		return b.appendFile(file, true)
+	}
+
+	return b.appendFile(file, false)
 }
 
 // MapTo accepts a struct pointer and populates it with the current config state.
